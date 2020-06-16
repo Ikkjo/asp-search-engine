@@ -1,5 +1,5 @@
 import kivy
-from search.search import search
+from find.search import search
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.button import Button
