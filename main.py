@@ -1,5 +1,5 @@
-from view.search_view import AppWindow
+from view.search_view import SearchApp
 
 
 if __name__ == '__main__':
-    AppWindow().run()
+    SearchApp().run()

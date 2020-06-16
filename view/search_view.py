@@ -5,9 +5,10 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.textinput import TextInput
+from kivy.uix.screenmanager import Screen, ScreenManager
 kivy.require("1.11.1")
 
-class MainPage(GridLayout):
+class SearchPage(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.cols = 2
@@ -28,7 +29,26 @@ class MainPage(GridLayout):
         search(search_term)
 
 
+class ResultPage(GridLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.cols = 1
+        
 
-class AppWindow(App):
+
+class SearchApp(App):
+    title = "Text Searcher"
     def build(self):
-        return MainPage()
+        self.screen_manager = ScreenManager()
+
+        self.search_page = SearchPage()
+        screen = Screen(name="Search")
+        screen.add_widget(self.search_page)
+        self.screen_manager.add_widget(screen)
+
+        self.result_page = ResultPage()
+        screen = Screen(name="Search Result")
+        screen.add_widget(self.result_page)
+        self.screen_manager.add_widget(screen)
+
+        return self.screen_manager
