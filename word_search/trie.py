@@ -52,9 +52,6 @@ class Trie(object):
         last_character = word[-1]
         self._add_character(last_character, node, location, end=True)
 
-
-
-
     def _add_character(self, character, node, location=None , end=False):
         if character not in node.children:
             char_node = TrieNode(character)
@@ -76,14 +73,34 @@ class Trie(object):
 
         return char_node
 
+    def search(self, word):
+        """Searches for a word in the trie
+
+        :param word: word for which to search
+        :return:
+        """
+        return self._search(word, self._root)
+
+    def _search(self, word, node):
+        char = word[0]
+
+        # Base case if word is one character
+        if word in node.children and node.children[word].is_word:
+            return node.children[word].location
+
+        if char in node.children:
+            next_node = node.children[char]
+            return self._search(word[1:], next_node)
+
+
+
 if __name__ == '__main__':
-    trie = Trie()
-    trie.add_word("bubac", None)
-    trie.add_word("bubanj", None)
-    trie.add_word("bubrovnik", None)
-    trie.add_word("sloj", None)
-    trie.add_word("buba", None)
-    trie.add_word("abuka", None)
+    from word_search.trie_initialisation import initialise_trie
+    trie = initialise_trie()
+
+    trie.search("python")
+
+    test = True
 
 
 

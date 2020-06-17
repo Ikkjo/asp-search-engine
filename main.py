@@ -1,4 +1,4 @@
-from view.search_view import SearchApp
+from view.gui.search_view import SearchApp
 
 
 if __name__ == '__main__':
