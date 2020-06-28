@@ -1,3 +1,11 @@
+class TrieErrors(Exception):
+    """Base class for Trie errors"""
+    pass
+
+class WordNotFoundException(TrieErrors):
+    """Raised when word is not found during search"""
+    pass
+
 class WordLocation(object):
 
     def __init__(self, file_path: str, at_index: int):
@@ -36,15 +44,21 @@ class Trie(object):
         self._root = root
         self._length = 1
         self._word_count = 0
+        self._words = []
 
     @property
     def root(self):
         return self._root
 
+    @property
+    def words(self):
+        return self._words
+
     def __len__(self):
         return self._length
 
     def add_word(self, word, location):
+        self._words.append(word)
         node = self._root
         for character in word[:-1]:
             node = self._add_character(character, node)
@@ -79,7 +93,13 @@ class Trie(object):
         :param word: word for which to search
         :return:
         """
-        return self._search(word, self._root)
+
+        search_results = self._search(word, self._root)
+
+        if search_results is None:
+            raise WordNotFoundException
+
+        return search_results
 
     def _search(self, word, node):
         char = word[0]
