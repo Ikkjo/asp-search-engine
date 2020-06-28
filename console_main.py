@@ -3,9 +3,14 @@ from view.console.search_result_output import print_results
 from word_search.search import search, NoOccurrencesException
 from view.console.errors import no_occurrences
 from word_search.trie_initialisation import initialise_trie
+from word_search.autocompleter import AutoCompleter
+import readline
 
 def run():
     trie = initialise_trie()
+    ac = AutoCompleter(trie.words)
+    readline.set_completer(ac.complete)
+    readline.parse_and_bind('tab: complete')
     words = search_word_input().split(" ")
     search_words = []
     words_to_search = set()

@@ -1,5 +1,3 @@
-import readline
-
 class AutoCompleter(object):
 
     def __init__(self, options):
