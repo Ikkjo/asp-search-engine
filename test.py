@@ -1,7 +1,7 @@
 import cProfile
 from word_search.html_parser import Parser
-from word_search.trie import Trie, WordLocation
-from word_search.trie_initialisation import initialise_trie
+from word_search.trie import Trie, WordLocations
+from word_search.data_structure_initialisation import initialise_structures
 
 # Trie test ############################################################################################################
 #
@@ -29,7 +29,7 @@ from word_search.trie_initialisation import initialise_trie
 # title = "OVO JE TEST"
 
 # Search test ##########################################################################################################
-trie = initialise_trie()
+trie = initialise_structures()
 word = "python"
 cProfile("trie.search(word)")
 

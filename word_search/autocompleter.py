@@ -1,7 +1,7 @@
 class AutoCompleter(object):
 
     def __init__(self, options):
-        self.options = sorted(options)
+        self.options = sorted(list(options))
 
     def complete(self, text, state):
         if state == 0:  # on first trigger, build possible matches

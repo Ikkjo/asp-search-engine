@@ -2,8 +2,10 @@ from os.path import abspath
 
 def print_results(results: list, abs=True):
     for result in results:
-        occurrences = result[0]
-        file = abspath(result[1]) if abs else result[1]
+        res = result.item
+        rank = res[0]
+        out = res[1]
+        word = out["word"]
+        path = out["path"]
 
-        ocu_str = "occurrence" if occurrences == 1 else "occurrences"
-        print(f"{occurrences} {ocu_str} found in file {file}")
+        print(f"Searched for {word}, found in file {path} (Rank: {rank}")

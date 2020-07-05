@@ -1,2 +1,2 @@
-def search_word_input():
+def search_query_input():
     return input("Search for: ")

@@ -6,11 +6,12 @@ class WordNotFoundException(TrieErrors):
     """Raised when word is not found during search"""
     pass
 
-class WordLocation(object):
+class WordLocations(object):
 
-    def __init__(self, file_path: str, at_index: int):
+    def __init__(self, file_path: str, at_index: int, links: list):
         self._file_path = file_path
         self._at_index = at_index
+        self._links = links
 
     @property
     def file_path(self):
@@ -20,6 +21,16 @@ class WordLocation(object):
     def at_index(self):
         return self._at_index
 
+    @property
+    def links(self):
+        return self._links
+
+
+class SearchResult(object):
+
+    def __init__(self, locations: WordLocations, word):
+        self._word = word
+        self.file_locations = locations
 
 class TrieNode(object):
 
@@ -27,7 +38,8 @@ class TrieNode(object):
         self._char = char
         self.parent: TrieNode or None = None
         self.children = {}
-        self.location = {}
+        self.locations = []
+        self.indices = []
 
     @property
     def char(self):
@@ -35,7 +47,7 @@ class TrieNode(object):
 
     @property
     def is_word(self):
-        return len(self.location) > 0
+        return len(self.locations) > 0
 
 class Trie(object):
 
@@ -44,7 +56,7 @@ class Trie(object):
         self._root = root
         self._length = 1
         self._word_count = 0
-        self._words = []
+        self._words = set()
 
     @property
     def root(self):
@@ -58,15 +70,16 @@ class Trie(object):
         return self._length
 
     def add_word(self, word, location):
-        self._words.append(word)
+        self._words.add(word)
         node = self._root
         for character in word[:-1]:
             node = self._add_character(character, node)
+
         # Addition for last character
         last_character = word[-1]
         self._add_character(last_character, node, location, end=True)
 
-    def _add_character(self, character, node, location=None , end=False):
+    def _add_character(self, character, node, location=None, end=False):
         if character not in node.children:
             char_node = TrieNode(character)
             char_node.parent = node
@@ -80,9 +93,8 @@ class Trie(object):
             file_path = location.file_path
             index = location.at_index
 
-            if file_path not in char_node.location:
-                char_node.location[file_path] = []
-            char_node.location[file_path].append(index)
+            char_node.locations.append(file_path)
+            char_node.indices.append(index)
             self._word_count += 1
 
         return char_node
@@ -93,20 +105,20 @@ class Trie(object):
         :param word: word for which to search
         :return:
         """
+        if word not in self._words:
+            raise WordNotFoundException
 
         search_results = self._search(word, self._root)
 
-        if search_results is None:
-            raise WordNotFoundException
 
-        return search_results
+        return search_results[0], search_results[1]
 
     def _search(self, word, node):
         char = word[0]
 
         # Base case if word is one character
         if word in node.children and node.children[word].is_word:
-            return node.children[word].location
+            return node.children[word].locations, node.children[word].indices
 
         if char in node.children:
             next_node = node.children[char]
@@ -115,8 +127,8 @@ class Trie(object):
 
 
 if __name__ == '__main__':
-    from word_search.trie_initialisation import initialise_trie
-    trie = initialise_trie()
+    from word_search.data_structure_initialisation import initialise_structures
+    trie = initialise_structures()
 
     trie.search("python")
 
